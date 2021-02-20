@@ -13,6 +13,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class MenuCrudComponent implements OnInit {
   users = [] as User[];
   user = {} as User;
+  currentID = 0;
 
   createForm = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -55,16 +56,20 @@ export class MenuCrudComponent implements OnInit {
     });
   } 
 
-  updateUser(id) {
+  setID(id) {
+    this.currentID = id;
+  }
+
+  updateUser() {
     const { name, password, email } = this.createForm.value;
     this.user = {
       name, password, email
     }
     
-    this.userService.updateUser(this.user,id).subscribe(res => {
+    this.userService.updateUser(this.user,this.currentID).subscribe(res => {
       let counter = 0;
       Users.map(user => {
-        if(user.id == id) {
+        if(user.id == this.currentID) {
           Users[counter] = this.user;
         }
         counter++;
